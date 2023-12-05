@@ -24,8 +24,10 @@
                 "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/facades",
                 "--direction", "BtoA",
                 "--model", "pix2pix",
-                "--name", "facades_label2photo_pretrained",
+                "--name", "facades_pix2pix_bis",
+                // "--name", "facades_label2photo_pretrained",
                 "--batch_size", "16",
+                "--display_id",  "-1",
             ]    
         }
     ]
