@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Standard",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+        },
+        {
+            "name": "pix2pix",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/facades",
+                "--direction", "BtoA",
+                "--model", "pix2pix",
+                "--name", "facades_label2photo_pretrained",
+                "--batch_size", "16",
+            ]    
+        }
+    ]
+}
