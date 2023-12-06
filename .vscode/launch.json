@@ -21,13 +21,18 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/facades",
+                // "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/facades",
+                "--dataroot", "C:/Users/thoma/data/Data pix2pix/AB",
                 "--direction", "BtoA",
                 "--model", "pix2pix",
-                "--name", "facades_pix2pix_bis",
+                "--name", "fucci_dapi",
                 // "--name", "facades_label2photo_pretrained",
-                "--batch_size", "16",
                 "--display_id",  "-1",
+                "--batch_size", "16",
+                "--preprocess", "scale_width",
+                "--crop_size", "128",
+                "--load_size", "128",
+                "--netG", "unet_128",
             ]    
         }
     ]
