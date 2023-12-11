@@ -25,14 +25,15 @@
                 "--dataroot", "C:/Users/thoma/data/Data pix2pix/AB",
                 "--direction", "BtoA",
                 "--model", "pix2pix",
-                "--name", "fucci_dapi",
+                "--name", "fucci_dapi_custom",
                 // "--name", "facades_label2photo_pretrained",
-                "--display_id",  "-1",
+                // "--display_id",  "-1",
                 "--batch_size", "16",
                 "--preprocess", "scale_width",
-                "--crop_size", "128",
-                "--load_size", "128",
-                "--netG", "unet_128",
+                "--crop_size", "160",
+                "--load_size", "160",
+                "--netG", "custom_unet",
+                "--use_wandb"
             ]    
         }
     ]
