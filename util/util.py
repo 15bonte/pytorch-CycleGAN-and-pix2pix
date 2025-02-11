@@ -5,6 +5,9 @@ import numpy as np
 from PIL import Image
 import os
 
+from cnn_framework.utils.tools import save_tiff
+
+
 
 def tensor2im(input_image, imtype=np.uint8):
     """"Converts a Tensor array into a numpy image array.
@@ -53,6 +56,9 @@ def save_image(image_numpy, image_path, aspect_ratio=1.0):
         image_numpy (numpy array) -- input numpy array
         image_path (str)          -- the path of the image
     """
+
+    save_tiff(image_numpy, image_path.replace('.png', '.tiff'), original_order="YXC")
+    return
 
     image_pil = Image.fromarray(image_numpy)
     h, w, _ = image_numpy.shape
