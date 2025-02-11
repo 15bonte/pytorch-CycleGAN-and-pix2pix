@@ -78,10 +78,14 @@ def get_params(opt, size):
     return {'crop_pos': (x, y), 'flip': flip}
 
 
-def get_transform(opt, params=None, grayscale=False, method=transforms.InterpolationMode.BICUBIC, convert=True):
+def get_transform(opt, params=None, grayscale=False, method=transforms.InterpolationMode.BICUBIC, convert=True, mean_std={}, pad_size=0):
     transform_list = []
     if grayscale:
         transform_list.append(transforms.Grayscale(1))
+
+    if 'pad' in opt.preprocess:
+        transform_list.append(transforms.Pad(pad_size, fill=0, padding_mode='constant'))
+
     if 'resize' in opt.preprocess:
         osize = [opt.load_size, opt.load_size]
         transform_list.append(transforms.Resize(osize, method))
@@ -103,7 +107,9 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
         elif params['flip']:
             transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
 
-    if convert:
+    if len(mean_std):
+        transform_list += [transforms.Normalize(mean_std['mean'], mean_std['std'])]
+    elif convert:
         transform_list += [transforms.ToTensor()]
         if grayscale:
             transform_list += [transforms.Normalize((0.5,), (0.5,))]

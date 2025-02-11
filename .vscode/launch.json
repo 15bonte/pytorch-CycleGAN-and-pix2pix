@@ -25,7 +25,7 @@
                 "--dataroot", "C:/Users/thoma/data/Data pix2pix/AB",
                 "--direction", "BtoA",
                 "--model", "pix2pix",
-                "--name", "fucci_dapi_custom",
+                "--name", "fucci_dapi_custom5",
                 // "--name", "facades_label2photo_pretrained",
                 // "--display_id",  "-1",
                 "--batch_size", "16",
@@ -33,8 +33,32 @@
                 "--crop_size", "160",
                 "--load_size", "160",
                 "--netG", "custom_unet",
-                "--use_wandb"
+                // "--use_wandb"
             ]    
+        },
+        {
+            "name": "cycle_gan",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/sirdna2dapi",
+                // "--dataroot", "C:/Users/thoma/Downloads/horse2zebra",
+                "--model", "cycle_gan",
+                "--name", "sirdna2dapi",
+                "--display_id",  "-1",
+                "--mean_std_path_A", "C:/Users/thoma/OneDrive/Bureau/mean_std_sir_dna.json",
+                "--mean_std_path_B", "C:/Users/thoma/OneDrive/Bureau/mean_std_dapi.json",
+                "--input_nc", "5", // number of SiR-DNA z-stacks
+                "--output_nc", "5", // number of DAPI z-stacks
+                "--preprocess", "pad_resize_crop",
+                "--pad_size_A", "280",
+                "--pad_size_B", "430",
+                "--load_size", "128",
+                "--crop_size", "128",
+            ]
         }
     ]
 }
