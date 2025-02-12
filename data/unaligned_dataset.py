@@ -80,12 +80,12 @@ class UnalignedDataset(BaseDataset):
                         method=ProjectMethods.Channel,
                         channels=[0],
                         axis=1,  # channels
-                    )]).get_processed_image().squeeze())
+                    )]).get_processed_image().squeeze()) # SiR-DNA
         B_img = torch.from_numpy(TiffReader(B_path, project=[Projection(
                         method=ProjectMethods.Channel,
                         channels=[2],
                         axis=1,  # channels
-                    )]).get_processed_image().squeeze())
+                    )]).get_processed_image().squeeze())  # DAPI
         
         # Original
         # A_img = Image.open(A_path).convert('RGB')
