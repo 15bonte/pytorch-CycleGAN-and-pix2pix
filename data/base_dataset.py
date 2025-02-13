@@ -84,7 +84,7 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
         transform_list.append(transforms.Grayscale(1))
 
     if 'pad' in opt.preprocess:
-        transform_list.append(transforms.Pad(pad_size, fill=0, padding_mode='constant'))
+        transform_list.append(transforms.CenterCrop(pad_size))
 
     if 'resize' in opt.preprocess:
         osize = [opt.load_size, opt.load_size]
