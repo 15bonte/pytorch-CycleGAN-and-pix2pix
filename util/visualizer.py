@@ -177,7 +177,7 @@ class Visualizer():
             table_row = [epoch]
             ims_dict = {}
             for label, image in visuals.items():
-                image_numpy = util.tensor2im(image)
+                image_numpy = util.tensor2im(image)[..., 2] # middle channel
                 wandb_image = wandb.Image(image_numpy)
                 table_row.append(wandb_image)
                 ims_dict[label] = wandb_image
