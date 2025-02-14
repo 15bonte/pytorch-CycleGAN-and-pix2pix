@@ -72,12 +72,12 @@ class UnalignedDataset(BaseDataset):
         # New code
         A_img = torch.from_numpy(TiffReader(A_path, project=[Projection(
                         method=ProjectMethods.Channel,
-                        channels=[self.opt.A_channel], # SiR-DNA channel
+                        channels=[self.opt.channel_A], # SiR-DNA channel
                         axis=1,  # channels
                     )]).get_processed_image().squeeze()) # SiR-DNA
         B_img = torch.from_numpy(TiffReader(B_path, project=[Projection(
                         method=ProjectMethods.Channel,
-                        channels=[self.opt.B_channel], # DAPI channel
+                        channels=[self.opt.channel_B], # DAPI channel
                         axis=1,  # channels
                     )]).get_processed_image().squeeze())  # DAPI
         
