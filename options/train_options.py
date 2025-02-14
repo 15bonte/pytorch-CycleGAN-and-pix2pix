@@ -36,10 +36,10 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--lr_policy', type=str, default='linear', help='learning rate policy. [linear | step | plateau | cosine]')
         parser.add_argument('--lr_decay_iters', type=int, default=50, help='multiply by a gamma every lr_decay_iters iterations')
         # custom parameters
-        parser.add_argument('--mean_std_path_A', type=str, default="")
-        parser.add_argument('--mean_std_path_B', type=str, default="")
         parser.add_argument('--pad_size_A', type=int, help='pad A images to this size')
         parser.add_argument('--pad_size_B', type=int, help='pad B images to this size')
+        parser.add_argument('--channel_A', type=int, help='A channel to consider')
+        parser.add_argument('--channel_B', type=int, help='B channel to consider')
 
         self.isTrain = True
         return parser

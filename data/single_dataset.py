@@ -50,7 +50,7 @@ class SingleDataset(BaseDataset):
         # New code
         A_img = torch.from_numpy(TiffReader(A_path, project=[Projection(
                         method=ProjectMethods.Channel,
-                        channels=[3], # DAPI channel
+                        channels=[self.opt.channel], # DAPI channel
                         axis=1,  # channels
                     )]).get_processed_image().squeeze())
         

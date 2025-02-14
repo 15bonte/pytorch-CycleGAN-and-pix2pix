@@ -9,6 +9,15 @@ from PIL import Image
 import torchvision.transforms as transforms
 from abc import ABC, abstractmethod
 
+from cnn_framework.utils.model_params.base_model_params import BaseModelParams
+from cnn_framework.utils.data_loader_generators.classifier_data_loader_generator import (
+    DataLoaderGenerator,
+)
+from cnn_framework.utils.data_managers.default_data_manager import DefaultDataManager
+from cnn_framework.utils.data_loader_generators.data_loader_generator import (
+    get_mean_and_std,
+)
+from cnn_framework.utils.data_sets.basic_data_set import BasicDataSet
 
 class BaseDataset(data.Dataset, ABC):
     """This class is an abstract base class (ABC) for datasets.
@@ -83,6 +92,16 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
     if grayscale:
         transform_list.append(transforms.Grayscale(1))
 
+    if len(mean_std):
+        transform_list += [transforms.Normalize(mean_std['mean'], mean_std['std'])] # data between -1 and 1
+    elif convert:
+        transform_list += [transforms.ToTensor()]
+        # Initially, data is between 0 and 1.
+        if grayscale:
+            transform_list += [transforms.Normalize((0.5,), (0.5,))]
+        else:
+            transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+
     if 'pad' in opt.preprocess:
         transform_list.append(transforms.CenterCrop(pad_size))
 
@@ -107,14 +126,6 @@ def get_transform(opt, params=None, grayscale=False, method=transforms.Interpola
         elif params['flip']:
             transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
 
-    if len(mean_std):
-        transform_list += [transforms.Normalize(mean_std['mean'], mean_std['std'])]
-    elif convert:
-        transform_list += [transforms.ToTensor()]
-        if grayscale:
-            transform_list += [transforms.Normalize((0.5,), (0.5,))]
-        else:
-            transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
 
@@ -171,3 +182,13 @@ def __print_size_warning(ow, oh, w, h):
               "(%d, %d). This adjustment will be done to all images "
               "whose sizes are not multiples of 4" % (ow, oh, w, h))
         __print_size_warning.has_printed = True
+
+def compute_mean_std(data_dir, c_indexes):
+    parameters = BaseModelParams(name="test")
+    parameters.data_dir = data_dir
+    parameters.test_ratio = 1
+    parameters.z_indexes = [0, 1, 2, 3, 4]
+    parameters.c_indexes = c_indexes
+    loader_generator = DataLoaderGenerator(parameters, BasicDataSet, DefaultDataManager)
+    _, _, test_dl = loader_generator.generate_data_loader()
+    return get_mean_and_std([test_dl])

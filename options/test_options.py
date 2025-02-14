@@ -22,6 +22,7 @@ class TestOptions(BaseOptions):
         # custom parameters
         parser.add_argument('--mean_std_path', type=str, default="")
         parser.add_argument('--pad_size', type=int, help='pad test images to this size')
+        parser.add_argument('--channel', type=int, help='channel to consider')
 
         self.isTrain = False
         return parser

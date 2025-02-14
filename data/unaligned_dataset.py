@@ -1,8 +1,9 @@
 import json
 import os
 
+from matplotlib import pyplot as plt
 import numpy as np
-from data.base_dataset import BaseDataset, get_transform
+from data.base_dataset import BaseDataset, compute_mean_std, get_transform
 from data.image_folder import make_dataset
 from PIL import Image
 import random
@@ -42,16 +43,9 @@ class UnalignedDataset(BaseDataset):
         input_nc = self.opt.output_nc if btoA else self.opt.input_nc       # get the number of channels of input image
         output_nc = self.opt.input_nc if btoA else self.opt.output_nc      # get the number of channels of output image
         
-        if os.path.isfile(opt.mean_std_path_A):
-            with open(opt.mean_std_path_A, "r") as mean_std_file:
-                mean_std_A = json.load(mean_std_file)
-        else:
-            mean_std_A = {}
-        if os.path.isfile(opt.mean_std_path_B):
-            with open(opt.mean_std_path_B, "r") as mean_std_file:
-                mean_std_B = json.load(mean_std_file)
-        else:
-            mean_std_B = {}
+        # Compute mean & std
+        mean_std_A = compute_mean_std(os.path.join(opt.dataroot, "trainA"), [opt.channel_A]) # SiR-DNA channel
+        mean_std_B = compute_mean_std(os.path.join(opt.dataroot, "trainB"), [opt.channel_B]) # DAPI channel
         
         self.transform_A = get_transform(self.opt, grayscale=(input_nc == 1), mean_std=mean_std_A, pad_size=opt.pad_size_A)
         self.transform_B = get_transform(self.opt, grayscale=(output_nc == 1), mean_std=mean_std_B, pad_size=opt.pad_size_B)
@@ -78,12 +72,12 @@ class UnalignedDataset(BaseDataset):
         # New code
         A_img = torch.from_numpy(TiffReader(A_path, project=[Projection(
                         method=ProjectMethods.Channel,
-                        channels=[0],
+                        channels=[self.opt.A_channel], # SiR-DNA channel
                         axis=1,  # channels
                     )]).get_processed_image().squeeze()) # SiR-DNA
         B_img = torch.from_numpy(TiffReader(B_path, project=[Projection(
                         method=ProjectMethods.Channel,
-                        channels=[3], # DAPI channel
+                        channels=[self.opt.B_channel], # DAPI channel
                         axis=1,  # channels
                     )]).get_processed_image().squeeze())  # DAPI
         
