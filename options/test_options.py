@@ -20,9 +20,10 @@ class TestOptions(BaseOptions):
         # To avoid cropping, the load_size should be the same as crop_size
         parser.set_defaults(load_size=parser.get_default('crop_size'))
         # custom parameters
-        parser.add_argument('--mean_std_path', type=str, default="")
         parser.add_argument('--pad_size', type=int, help='pad test images to this size')
         parser.add_argument('--channel', type=int, help='channel to consider')
+        parser.add_argument('--mean_std_path_in', type=str, default="")
+        parser.add_argument('--mean_std_path_out', type=str, default="")
 
         self.isTrain = False
         return parser

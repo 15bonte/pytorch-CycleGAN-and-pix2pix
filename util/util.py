@@ -107,3 +107,40 @@ def mkdir(path):
     """
     if not os.path.exists(path):
         os.makedirs(path)
+
+# Function to detect padding
+def detect_padding(padded_image):
+    def find_edge(values):
+        first_diff = np.where(values != values[0])[0]
+        assert first_diff.size > 0
+        return first_diff[0] - 1
+
+    # Detect padding on each side
+    top_pad = find_edge(padded_image[:, 0])
+    bottom_pad = find_edge(padded_image[::-1, 0])
+    left_pad = find_edge(padded_image[0, :])
+    right_pad = find_edge(padded_image[0, ::-1])
+
+    return top_pad, bottom_pad, left_pad, right_pad
+
+
+def unpad_egde(padded_image):
+    """
+    Unpad image from padding.
+    CYX format.
+    """
+
+    # Get the padding widths
+    top_pad, bottom_pad, left_pad, right_pad = detect_padding(padded_image[0])
+
+    # Slice the original image from the padded array
+    original_image = padded_image[
+        ..., top_pad : -bottom_pad or None, left_pad : -right_pad or None
+    ]
+    return original_image
+
+def adapt_image(image, test_opt):
+    # Remove padding -- check CYX
+    image = unpad_egde(image)
+    # Apply reverse normalization
+    return image
