@@ -25,13 +25,13 @@ class SingleDataset(BaseDataset):
         self.A_paths = sorted(make_dataset(opt.dataroot, opt.max_dataset_size))
         input_nc = self.opt.output_nc if self.opt.direction == 'BtoA' else self.opt.input_nc
         
-        if os.path.isfile(opt.mean_std_path):
-            with open(opt.mean_std_path, "r") as mean_std_file:
+        if os.path.isfile(opt.mean_std_path_input):
+            with open(opt.mean_std_path_input, "r") as mean_std_file:
                 mean_std = json.load(mean_std_file)
         else:
             mean_std = {}
 
-        self.transform = get_transform(opt, grayscale=(input_nc == 1), mean_std=mean_std, pad_size=opt.pad_size)
+        self.transform = get_transform(opt, grayscale=(input_nc == 1), mean_std=mean_std, pad_size=opt.pad_size_input)
 
         print("Careful: dedicated to generate SiR-DNA images from DAPI.")
 

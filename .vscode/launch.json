@@ -74,13 +74,15 @@
                 "--name", "sirdna2dapi_pretrained",
                 "--no_dropout",
                 // Custom parameters
-                "--mean_std_path", "C:/Users/thoma/data/data_oriane_november/mean_std_dapi.json",
                 "--input_nc", "5", // number of SiR-DNA z-stacks
                 "--output_nc", "5", // number of DAPI z-stacks
                 "--preprocess", "pad_resize_crop",
-                "--pad_size", "430",
                 "--load_size", "128",
                 "--crop_size", "128",
+                "--pad_size_input", "430",
+                "--pad_size_output", "280",
+                "--mean_std_path_input", "C:/Users/thoma/data/data_oriane_november/mean_std_dapi.json",
+                "--mean_std_path_output", "C:/Users/thoma/data/Data Oriane April/mean_std_sir_dna.json",
                 "--channel", "3",
             ]
         }

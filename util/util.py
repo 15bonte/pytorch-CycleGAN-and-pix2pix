@@ -1,15 +1,17 @@
 """This module contains simple helper functions """
 from __future__ import print_function
+from matplotlib import pyplot as plt
 import torch
 import numpy as np
 from PIL import Image
 import os
+from skimage.transform import resize
 
 from cnn_framework.utils.tools import save_tiff
 
 
 
-def tensor2im(input_image, imtype=np.uint8):
+def tensor2im(input_image, mean_std, imtype=np.uint8):
     """"Converts a Tensor array into a numpy image array.
 
     Parameters:
@@ -24,7 +26,13 @@ def tensor2im(input_image, imtype=np.uint8):
         image_numpy = image_tensor[0].cpu().float().numpy()  # convert it into a numpy array
         if image_numpy.shape[0] == 1:  # grayscale to RGB
             image_numpy = np.tile(image_numpy, (3, 1, 1))
-        image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
+        
+        # Apply reverse normalization
+        image_numpy = np.clip((np.transpose(image_numpy, (1, 2, 0)) * mean_std["std"] + mean_std["mean"]) * 65535.0, 0, 65535)
+
+        # # Original code
+        # image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
+
     else:  # if it is a numpy array, do nothing
         image_numpy = input_image
     return image_numpy.astype(imtype)
@@ -116,31 +124,39 @@ def detect_padding(padded_image):
         return first_diff[0] - 1
 
     # Detect padding on each side
-    top_pad = find_edge(padded_image[:, 0])
-    bottom_pad = find_edge(padded_image[::-1, 0])
-    left_pad = find_edge(padded_image[0, :])
-    right_pad = find_edge(padded_image[0, ::-1])
+    top_pad = find_edge(padded_image[:, padded_image.shape[1] // 2]) + 1
+    bottom_pad = find_edge(padded_image[::-1, padded_image.shape[1] // 2]) + 1
+    left_pad = find_edge(padded_image[padded_image.shape[0] // 2, :]) + 1
+    right_pad = find_edge(padded_image[padded_image.shape[0] // 2, ::-1]) + 1
 
     return top_pad, bottom_pad, left_pad, right_pad
 
 
-def unpad_egde(padded_image):
-    """
-    Unpad image from padding.
-    CYX format.
-    """
-
+def adapt_image(image, test_opt, pad_size, padding):
+    image = np.moveaxis(image, -1, 0) # CYX
+    
     # Get the padding widths
-    top_pad, bottom_pad, left_pad, right_pad = detect_padding(padded_image[0])
+    if padding is None:
+        top_pad, bottom_pad, left_pad, right_pad = detect_padding(image[0])
+        padding = (top_pad, bottom_pad, left_pad, right_pad)
+    else:
+        top_pad, bottom_pad, left_pad, right_pad = padding
 
     # Slice the original image from the padded array
-    original_image = padded_image[
+    unpad_img = image[
         ..., top_pad : -bottom_pad or None, left_pad : -right_pad or None
     ]
-    return original_image
+    
+    # Resize
+    resized_img = (resize(unpad_img, (unpad_img.shape[0], int(unpad_img.shape[1] * pad_size / test_opt.crop_size), int(unpad_img.shape[2] * pad_size / test_opt.crop_size))) * 65535).astype(np.uint16)
 
-def adapt_image(image, test_opt):
-    # Remove padding -- check CYX
-    image = unpad_egde(image)
-    # Apply reverse normalization
-    return image
+    # plt.subplot(2, 2, 1)
+    # plt.imshow(image[0])
+    # plt.subplot(2, 2, 2)
+    # plt.imshow(unpad_img[0])
+    # plt.subplot(2, 2, 3)
+    # plt.imshow(resized_img[0])
+    # plt.show()
+
+    # Back to YXC
+    return np.moveaxis(resized_img, 0, -1), padding
