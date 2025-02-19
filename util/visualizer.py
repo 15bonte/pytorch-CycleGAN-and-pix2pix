@@ -183,6 +183,8 @@ class Visualizer():
             ims_dict = {}
             for label, image in visuals.items():
                 image_numpy = util.tensor2im(image, mean_std_dict[label.split("_")[1]], np.uint16)[..., self.opt.input_nc // 2] # middle channel
+                # Normalize image
+                image_numpy = (image_numpy - image_numpy.min()) / (image_numpy.max() - image_numpy.min())
                 wandb_image = wandb.Image(image_numpy)
                 table_row.append(wandb_image)
                 ims_dict[label] = wandb_image

@@ -28,7 +28,13 @@ def tensor2im(input_image, mean_std, imtype=np.uint8):
             image_numpy = np.tile(image_numpy, (3, 1, 1))
         
         # Apply reverse normalization
-        image_numpy = np.clip((np.transpose(image_numpy, (1, 2, 0)) * mean_std["std"] + mean_std["mean"]) * 65535.0, 0, 65535)
+        if imtype == np.uint16:
+            factor = 65535.0
+        elif imtype == np.uint8:
+            factor = 255.0
+        else:
+            raise NotImplementedError("Only uint8 and uint16 are supported for now")
+        image_numpy = np.clip((np.transpose(image_numpy, (1, 2, 0)) * mean_std["std"] + mean_std["mean"]) * factor, 0, factor)
 
         # # Original code
         # image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
