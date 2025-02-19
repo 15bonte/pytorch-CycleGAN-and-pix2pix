@@ -85,7 +85,7 @@ class Visualizer():
         self.current_epoch = 0
         self.ncols = opt.display_ncols
 
-        if self.display_id > 0:  # connect to a visdom server given <display_port> and <display_server>
+        if self.display_id > 1:  # connect to a visdom server given <display_port> and <display_server>
             import visdom
             self.vis = visdom.Visdom(server=opt.display_server, port=opt.display_port, env=opt.display_env)
             if not self.vis.check_connection():
@@ -117,7 +117,7 @@ class Visualizer():
         print('Command: %s' % cmd)
         Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 
-    def display_current_results(self, visuals, epoch, save_result):
+    def display_current_results(self, visuals, epoch, save_result, mean_std_dict):
         """Display current results on visdom; save current results to an HTML file.
 
         Parameters:
@@ -125,7 +125,7 @@ class Visualizer():
             epoch (int) - - the current epoch
             save_result (bool) - - if save the current results to an HTML file
         """
-        if self.display_id > 0:  # show images in the browser using visdom
+        if self.display_id > 1:  # show images in the browser using visdom
             ncols = self.ncols
             if ncols > 0:        # show all the images in one visdom panel
                 ncols = min(ncols, len(visuals))
@@ -182,7 +182,7 @@ class Visualizer():
             table_row = [epoch]
             ims_dict = {}
             for label, image in visuals.items():
-                image_numpy = util.tensor2im(image)[..., 2] # middle channel
+                image_numpy = util.tensor2im(image, mean_std_dict[label.split("_")[1]], np.uint16)[..., self.opt.input_nc // 2] # middle channel
                 wandb_image = wandb.Image(image_numpy)
                 table_row.append(wandb_image)
                 ims_dict[label] = wandb_image
@@ -227,18 +227,19 @@ class Visualizer():
             self.plot_data = {'X': [], 'Y': [], 'legend': list(losses.keys())}
         self.plot_data['X'].append(epoch + counter_ratio)
         self.plot_data['Y'].append([losses[k] for k in self.plot_data['legend']])
-        try:
-            self.vis.line(
-                X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
-                Y=np.array(self.plot_data['Y']),
-                opts={
-                    'title': self.name + ' loss over time',
-                    'legend': self.plot_data['legend'],
-                    'xlabel': 'epoch',
-                    'ylabel': 'loss'},
-                win=self.display_id)
-        except VisdomExceptionBase:
-            self.create_visdom_connections()
+        if self.display_id > 1:
+            try:
+                self.vis.line(
+                    X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
+                    Y=np.array(self.plot_data['Y']),
+                    opts={
+                        'title': self.name + ' loss over time',
+                        'legend': self.plot_data['legend'],
+                        'xlabel': 'epoch',
+                        'ylabel': 'loss'},
+                    win=self.display_id)
+            except VisdomExceptionBase:
+                self.create_visdom_connections()
         if self.use_wandb:
             self.wandb_run.log(losses)
 

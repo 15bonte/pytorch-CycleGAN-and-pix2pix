@@ -48,17 +48,19 @@
                 // "--dataroot", "C:/Users/thoma/Downloads/horse2zebra",
                 "--model", "cycle_gan",
                 "--name", "sirdna2dapi",
-                "--display_id",  "-1",
+                "--display_id",  "1",
                 // Custom parameters
                 "--input_nc", "5", // number of SiR-DNA z-stacks
                 "--output_nc", "5", // number of DAPI z-stacks
                 "--preprocess", "pad_resize_crop",
                 "--pad_size_A", "280",
                 "--pad_size_B", "430",
-                "--load_size", "128",
-                "--crop_size", "128",
+                "--load_size", "256",
+                "--crop_size", "256",
                 "--channel_A", "0",
                 "--channel_B", "3",
+                "--use_wandb",
+                "--no_html"
             ]
         },
         {
@@ -77,8 +79,8 @@
                 "--input_nc", "5", // number of SiR-DNA z-stacks
                 "--output_nc", "5", // number of DAPI z-stacks
                 "--preprocess", "pad_resize_crop",
-                "--load_size", "128",
-                "--crop_size", "128",
+                "--load_size", "256",
+                "--crop_size", "256",
                 "--pad_size_input", "430",
                 "--pad_size_output", "280",
                 "--mean_std_path_input", "C:/Users/thoma/data/data_oriane_november/mean_std_dapi.json",
