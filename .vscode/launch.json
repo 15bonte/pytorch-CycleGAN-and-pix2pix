@@ -86,6 +86,7 @@
                 "--mean_std_path_input", "C:/Users/thoma/data/data_oriane_november/mean_std_dapi.json",
                 "--mean_std_path_output", "C:/Users/thoma/data/Data Oriane April/mean_std_sir_dna.json",
                 "--channel", "3",
+                "--netG", "unet_256",
             ]
         }
     ]

@@ -71,7 +71,7 @@ def save_image(image_numpy, image_path, aspect_ratio=1.0):
         image_path (str)          -- the path of the image
     """
 
-    save_tiff(image_numpy, image_path.replace('.png', '.tiff'), original_order="YXC")
+    save_tiff(image_numpy, image_path.replace('.png', '.tiff'), original_order="YXZ")
     return
 
     image_pil = Image.fromarray(image_numpy)
