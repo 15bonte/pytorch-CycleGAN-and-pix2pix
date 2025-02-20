@@ -60,7 +60,9 @@
                 "--channel_A", "0",
                 "--channel_B", "3",
                 "--use_wandb",
-                "--no_html"
+                "--no_html",
+                "--netG", "unet_256",
+
             ]
         },
         {
