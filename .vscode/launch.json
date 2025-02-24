@@ -75,7 +75,8 @@
             "args": [
                 "--dataroot", "C:/Users/thoma/pytorch-CycleGAN-and-pix2pix/datasets/sirdna2dapi/testB",
                 "--model", "test",
-                "--name", "sirdna2dapi_pretrained",
+                "--checkpoints_dir", "C:/Users/thoma/models/cycle_gan",
+                "--name", "20250220",
                 "--no_dropout",
                 // Custom parameters
                 "--input_nc", "5", // number of SiR-DNA z-stacks
@@ -89,6 +90,8 @@
                 "--mean_std_path_output", "C:/Users/thoma/data/Data Oriane April/mean_std_sir_dna.json",
                 "--channel", "3",
                 "--netG", "unet_256",
+                "--epoch", "10",
+                "--model_suffix", "_B"
             ]
         }
     ]
