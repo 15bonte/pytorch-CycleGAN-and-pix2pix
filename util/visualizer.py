@@ -44,7 +44,8 @@ def save_images(webpage, visuals, image_path, opt, mean_std, aspect_ratio=1.0, w
         if label == "real":
             padding = None
         im, padding = util.adapt_image(im, opt, pad_size, padding) # check name or label
-        image_name = '%s_%s.png' % (name, label)
+        underscore_label = "_real" if label == "real" else ""
+        image_name = f"{name}{underscore_label}.png"
         save_path = os.path.join(image_dir, image_name)
         util.save_image(im, save_path, aspect_ratio=aspect_ratio)
         ims.append(image_name)
