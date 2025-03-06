@@ -44,8 +44,8 @@ class UnalignedDataset(BaseDataset):
         output_nc = self.opt.input_nc if btoA else self.opt.output_nc      # get the number of channels of output image
         
         # Compute mean & std
-        self.mean_std_A = compute_mean_std(os.path.join(opt.dataroot, "trainA"), [opt.channel_A]) # SiR-DNA channel
-        self.mean_std_B = compute_mean_std(os.path.join(opt.dataroot, "trainB"), [opt.channel_B]) # DAPI channel
+        self.mean_std_A = compute_mean_std(os.path.join(opt.dataroot, "trainA"), [opt.channel_A], list(range(opt.input_nc))) # SiR-DNA channel
+        self.mean_std_B = compute_mean_std(os.path.join(opt.dataroot, "trainB"), [opt.channel_B], list(range(opt.output_nc))) # DAPI channel
         
         self.transform_A = get_transform(self.opt, grayscale=(input_nc == 1), mean_std=self.mean_std_A, pad_size=opt.pad_size_A)
         self.transform_B = get_transform(self.opt, grayscale=(output_nc == 1), mean_std=self.mean_std_B, pad_size=opt.pad_size_B)

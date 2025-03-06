@@ -183,11 +183,11 @@ def __print_size_warning(ow, oh, w, h):
               "whose sizes are not multiples of 4" % (ow, oh, w, h))
         __print_size_warning.has_printed = True
 
-def compute_mean_std(data_dir, c_indexes):
+def compute_mean_std(data_dir, c_indexes, z_indexes):
     parameters = BaseModelParams(name="test")
     parameters.data_dir = data_dir
     parameters.test_ratio = 1
-    parameters.z_indexes = [0, 1, 2, 3, 4]
+    parameters.z_indexes = z_indexes
     parameters.c_indexes = c_indexes
     loader_generator = DataLoaderGenerator(parameters, BasicDataSet, DefaultDataManager)
     _, _, test_dl = loader_generator.generate_data_loader()
